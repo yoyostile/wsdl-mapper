@@ -4,10 +4,13 @@ require 'wsdl_mapper/dom/name'
 require 'wsdl_mapper/serializers/serializer_factory'
 require 'wsdl_mapper/serializers/type_directory'
 
+require 'wsdl_mapper_testing/test_helper'
+
 module SerializersTests
   class SerializerFactoryTest < ::WsdlMapperTesting::Test
     include WsdlMapper::Serializers
     include WsdlMapper::Dom
+    include WsdlMapperTesting::TestHelper
 
     class NoteTypeSerializer
       def build(x, _obj, _name)
@@ -34,7 +37,7 @@ module SerializersTests
       serializer_factory = WsdlMapper::Serializers::SerializerFactory.new type_directory
 
       xml = serializer_factory.to_xml NoteType.new('to@example.org', 'from@example.org')
-      assert_equal <<XML, xml
+      assert_same_xml <<XML, xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note>
   <to>to@example.org</to>

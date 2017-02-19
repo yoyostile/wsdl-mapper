@@ -25,5 +25,16 @@ module WsdlMapperTesting
     def get_tmp_path
       TmpPath.new
     end
+
+    def assert_same_xml(this, that)
+      xml1 = normalize_xml this
+      xml2 = normalize_xml that
+
+      assert_equal xml1, xml2
+    end
+
+    def normalize_xml(xml)
+      xml.gsub(/>\s+</, '><').gsub('><', ">\n<").strip
+    end
   end
 end

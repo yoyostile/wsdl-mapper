@@ -4,11 +4,14 @@ require 'wsdl_mapper/dom/name'
 require 'wsdl_mapper/serializers/serializer_core'
 require 'wsdl_mapper/core_ext/time_duration'
 
+require 'wsdl_mapper_testing/test_helper'
+
 module SerializersTests
   class SerializerCoreTest < ::WsdlMapperTesting::Test
     include WsdlMapper::CoreExt
     include WsdlMapper::Serializers
     include WsdlMapper::Dom
+    include WsdlMapperTesting::TestHelper
 
     class MockResolver
       def initialize
@@ -58,7 +61,7 @@ module SerializersTests
 
       NoteTypeSerializer.new.build base, obj, [nil, 'note']
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note>
   <attachment>This is an attachment.</attachment>
@@ -78,7 +81,7 @@ XML
         x.value_builtin ['urn:WsdlMapper', 'body'], 'Just kidding', :string
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <ns0:note xmlns:ns0="urn:WsdlMapper">
   <ns0:to>to@example.org</ns0:to>
@@ -103,7 +106,7 @@ XML
         x.value_builtin ['urn:WsdlMapper', 'body'], 'Just kidding', :string
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note xmlns="urn:WsdlMapper">
   <to>to@example.org</to>
@@ -130,7 +133,7 @@ XML
         x.value_builtin ['urn:WsdlMapper', 'body'], 'Just kidding', :string
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <wm:note xmlns:wm="urn:WsdlMapper">
   <wm:to>to@example.org</wm:to>
@@ -155,7 +158,7 @@ XML
         x.value_builtin [nil, 'body'], 'Just kidding', :string
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note>
   <to>to@example.org</to>
@@ -180,7 +183,7 @@ XML
         x.value_builtin ['urn:WsdlMapper', 'body'], 'Just kidding', :string
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note xmlns="urn:WsdlMapper">
   <to>to@example.org</to>
@@ -207,7 +210,7 @@ XML
         x.value_builtin [nil, 'body'], 'Just kidding', :string
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note>
   <header>
@@ -237,7 +240,7 @@ XML
         end
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <attachments xmlns:ns0="http://schemas.xmlsoap.org/soap/encoding/" ns0:arrayType="attachment[2]">
   <attachment>
@@ -261,7 +264,7 @@ XML
         x.value_builtin [nil, 'from'], 'from@example.org', :string
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note>
   <to>to@example.org</to>
@@ -281,7 +284,7 @@ XML
         x.value_builtin [nil, 'from'], 'from@example.org', :string
       end
 
-      assert_equal <<XML, base.to_xml
+      assert_same_xml <<XML, base.to_xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note uuid="12345">
   <to>to@example.org</to>
