@@ -16,7 +16,11 @@ module WsdlMapper
     class Deserializer
       include WsdlMapper::Dom
 
-      def initialize(type_mapping: WsdlMapper::TypeMapping::DEFAULT, qualified_elements: false, qualified_attributes: false)
+      def initialize(type_mapping: WsdlMapper::TypeMapping::DEFAULT,
+          qualified_elements: false,
+          qualified_attributes: false,
+          skip_unknown_elements: false
+      )
         @tm = type_mapping
         @element_mappings = Directory.new on_nil: Errors::UnknownElementError
         @type_mappings = Directory.new on_nil: Errors::UnknownTypeError
@@ -25,6 +29,7 @@ module WsdlMapper
         end
         @qualified_elements = qualified_elements
         @qualified_attributes = qualified_attributes
+        @skip_unknown_elements = skip_unknown_elements
       end
 
       def from_xml(xml)
@@ -68,6 +73,10 @@ module WsdlMapper
 
       def qualified_attributes?
         !!@qualified_attributes
+      end
+
+      def skip_unknown_elements?
+        !!@skip_unknown_elements
       end
     end
   end

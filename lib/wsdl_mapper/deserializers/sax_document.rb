@@ -16,6 +16,7 @@ module WsdlMapper
         @namespaces_stack = []
         @buffer = ''
         @wrapper = nil
+        @skipping = nil
         @current_frame = nil
       end
 
@@ -26,6 +27,9 @@ module WsdlMapper
       # @param [Array<Array<String, String>>] ns
       def start_element_namespace(name, attrs = [], _prefix = nil, uri = nil, ns = [])
         @buffer = ''
+        if @skipping
+          return
+        end
         uri = inherit_element_namespace uri
         name = Name.get uri, name
         namespaces = Namespaces.for Hash[ns]
@@ -34,12 +38,21 @@ module WsdlMapper
           @wrapper = name
           return
         end
-        type_name = get_type_name name, attrs
-        attrs = get_attributes type_name, attrs
-        parent = @current_frame
-        mapping = @base.get_type_mapping type_name
-        @current_frame = Frame.new name, type_name, attrs, parent, namespaces, @base, mapping
-        @current_frame.start
+        begin
+          type_name = get_type_name name, attrs
+          attrs = get_attributes type_name, attrs
+          parent = @current_frame
+          mapping = @base.get_type_mapping type_name
+          @current_frame = Frame.new name, type_name, attrs, parent, namespaces, @base, mapping
+          @current_frame.start
+        rescue WsdlMapper::Deserializers::Errors::UnknownElementError => e
+          if @base.skip_unknown_elements?
+            @skipping = name
+            return
+          else
+            raise e
+          end
+        end
       end
 
       # @param [String] name
@@ -49,6 +62,10 @@ module WsdlMapper
         @namespaces_stack.pop
         if @wrapper == Name.get(uri, name)
           @wrapper = nil
+          return
+        end
+        if @skipping == Name.get(uri, name)
+          @skipping = nil
           return
         end
         @current_frame.text = @buffer
@@ -97,7 +114,7 @@ module WsdlMapper
         Name.get ns, name
       end
 
-      def get_type_attr attrs
+      def get_type_attr(attrs)
         attrs.find do |attr|
           attr.uri == XSI_TYPE.ns && attr.localname == XSI_TYPE.name
         end
