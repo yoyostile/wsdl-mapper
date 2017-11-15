@@ -33,7 +33,7 @@ module WsdlMapper
       end
 
       def generate_wrapping(_ttg, f, _result, var_name, par_name)
-        f.in_def 'initialize', par_name do
+        f.in_def 'initialize', "#{par_name} = nil" do
           f.assignment var_name, par_name
         end
       end

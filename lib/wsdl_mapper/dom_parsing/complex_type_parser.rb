@@ -157,6 +157,7 @@ module WsdlMapper
         i = 0
 
         each_element node do |elm|
+          parse_complex_type_child elm, type if name_matches? elm, CHOICE
           next unless name_matches? elm, ELEMENT
 
           parse_complex_type_property elm, type, i, SEQUENCE

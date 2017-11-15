@@ -33,11 +33,7 @@ module WsdlMapper
           # ignore
         else
           type = schema.get_type type_name
-          begin
-            name = @generator.namer.get_type_name type
-          rescue => e
-            raise e
-          end
+          name = @generator.namer.get_type_name type
           requires << name.require_path
         end
       end

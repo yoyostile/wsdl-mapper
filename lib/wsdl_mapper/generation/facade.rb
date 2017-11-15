@@ -15,13 +15,14 @@ module WsdlMapper
       # @param [true, false] docs Set to `true` to generate documentation
       # @param [true, false] separate_modules Set to `true` to separate types and (de)serializers into different modules
       # @param [WsdlMapper::Naming::AbstractNamer] namer Inject a namer instance here to be used
-      def initialize(file:, out:, module_path: [], docs: false, separate_modules: true, namer: nil)
+      def initialize(file:, out:, module_path: [], docs: false, separate_modules: true, namer: nil, skip_constructors: false)
         @file = file
         @out = out
         @module_path = module_path
         @docs = docs
         @separate_modules = separate_modules
         @namer = namer
+        @skip_constructors = skip_constructors
       end
 
       def generate

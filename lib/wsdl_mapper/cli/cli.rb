@@ -17,6 +17,7 @@ module WsdlMapper
       class_option :separate_modules, type: :boolean, default: true, desc: 'Set to <true> to separate types, serializers and deserializers into different modules and subdirectories.'
       class_option :clear, type: :boolean, default: true, desc: 'Set to <true> to clear out the ouput directory before generation.'
       class_option :docs, type: :boolean, default: true, desc: 'Set to <true> to generate yardoc annotations and (if present in xsd) doc strings for generated classes and attributes.'
+      class_option :skip_constructors, type: :boolean, default: false, desc: 'Skip constructor generation'
 
       no_tasks do
         def facade_options(xsd_file, ext)
@@ -25,7 +26,8 @@ module WsdlMapper
             out: out(xsd_file, ext),
             module_path: module_path,
             docs: options[:docs],
-            separate_modules: options[:separate_modules]
+            separate_modules: options[:separate_modules],
+            skip_constructors: options[:skip_constructors],
           }
         end
 

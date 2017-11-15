@@ -11,7 +11,11 @@ module WsdlMapper
       end
 
       def generator
-        @generator ||= generator_class.new context, namer: namer, ctr_generator_factory: WsdlMapper::DomGeneration::DefaultCtrGenerator
+        @generator ||= generator_class.new context, namer: namer, ctr_generator_factory: ctr_generator_factory
+      end
+
+      def ctr_generator_factory
+        @skip_constructors ? WsdlMapper::DomGeneration::NullCtrGenerator : WsdlMapper::DomGeneration::DefaultCtrGenerator
       end
     end
   end
